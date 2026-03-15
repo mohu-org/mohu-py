@@ -1,0 +1,59 @@
+[package]
+name        = "mohu-py"
+version     = "0.1.0"
+edition     = "2024"
+license     = "MIT"
+description = "Python bindings for mohu — zero-copy NumPy interop via PyO3"
+repository  = "https://github.com/mohu-org/mohu-py"
+homepage    = "https://github.com/mohu-org/mohu-py"
+keywords    = ["numpy", "python", "pyo3", "array", "bindings"]
+categories  = ["api-bindings", "science"]
+
+[lib]
+name       = "mohu"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3      = { version = "0.23", features = ["extension-module", "abi3-py310", "multiple-pymethods"] }
+numpy     = "0.23"
+thiserror = "2"
+
+mohu-core    = { git = "https://github.com/mohu-org/mohu", package = "mohu-core" }
+mohu-compute = { git = "https://github.com/mohu-org/mohu-compute" }
+mohu-ops     = { git = "https://github.com/mohu-org/mohu", package = "mohu-ops" }
+
+[target.'cfg(unix)'.dependencies]
+tikv-jemallocator = "0.6"
+
+[features]
+default = ["full"]
+full    = ["linalg", "stats", "io"]
+linalg  = ["dep:mohu-linalg"]
+stats   = ["dep:mohu-stats"]
+io      = ["dep:mohu-io"]
+
+[dependencies.mohu-linalg]
+git      = "https://github.com/mohu-org/mohu-linalg"
+optional = true
+
+[dependencies.mohu-stats]
+git      = "https://github.com/mohu-org/mohu"
+package  = "mohu-stats"
+optional = true
+
+[dependencies.mohu-io]
+git      = "https://github.com/mohu-org/mohu"
+package  = "mohu-io"
+optional = true
+
+[profile.release]
+opt-level     = 3
+lto           = "thin"
+strip         = true
+panic         = "abort"
+
+[profile.dist-release]
+inherits      = "release"
+lto           = "fat"
+codegen-units = 1
+debug         = false
