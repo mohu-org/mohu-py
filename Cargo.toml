@@ -12,6 +12,8 @@ categories  = ["api-bindings", "science"]
 [lib]
 name       = "mohu"
 crate-type = ["cdylib"]
+test       = false
+doctest    = false
 
 [dependencies]
 pyo3      = { version = "0.23", features = ["extension-module", "abi3-py310", "multiple-pymethods"] }
