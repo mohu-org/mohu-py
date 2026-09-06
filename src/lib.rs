@@ -1,10 +1,10 @@
 use pyo3::prelude::*;
 
 mod array;
-mod ops;
-mod linalg;
-mod stats;
 mod io;
+mod linalg;
+mod ops;
+mod stats;
 
 #[pymodule]
 fn mohu(m: &Bound<'_, PyModule>) -> PyResult<()> {
